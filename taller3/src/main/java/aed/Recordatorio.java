@@ -40,8 +40,8 @@ public class Recordatorio {
         Recordatorio otroRecordatorio = (Recordatorio) otro;
 
         return mensaje == otroRecordatorio.mensaje
-        && fecha == otroRecordatorio.fecha
-        && horario == otroRecordatorio.horario;
+        && fecha.equals(otroRecordatorio.fecha)
+        && horario.equals(otroRecordatorio.horario);
     }
 
 }
