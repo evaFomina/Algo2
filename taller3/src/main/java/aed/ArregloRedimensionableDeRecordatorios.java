@@ -9,7 +9,12 @@ class ArregloRedimensionableDeRecordatorios implements SecuenciaDeRecordatorios 
     }
 
     public ArregloRedimensionableDeRecordatorios(ArregloRedimensionableDeRecordatorios vector) {
-        throw new UnsupportedOperationException("No implementada aun");
+        this();
+        for(Recordatorio recordatoio:vector.recordatorios) {
+            if (recordatorio !=null) {
+                this.agregarAtras(new Recordatorio(recordatorio));
+            }
+        }
     }
 
     public int longitud() {
@@ -48,7 +53,7 @@ class ArregloRedimensionableDeRecordatorios implements SecuenciaDeRecordatorios 
     }
 
     public ArregloRedimensionableDeRecordatorios copiar() {
-        throw new UnsupportedOperationException("No implementada aun");
+        return new ArregloRedimendionableDeRecordatorios(this);
     }
 
 }
