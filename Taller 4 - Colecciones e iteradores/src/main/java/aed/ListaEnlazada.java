@@ -35,8 +35,10 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     public void agregarAdelante(T elem) {
         Nodo nuevo = new Nodo(elem);
         if(primero != null) {
-            primero.ant = nuevo; 
-        }    
+            primero.ant = nuevo;  
+        }  else {
+            ultimNodo = nuevo;
+        } 
         nuevo.sig = primero;
         nuevo.ant = null;
         primero = nuevo;
@@ -45,12 +47,21 @@ public class ListaEnlazada<T> implements Secuencia<T> {
 
     public void agregarAtras(T elem) {
         Nodo nuevo = new Nodo(elem);
-        if (primero != null){
+        if (primero == null){
+            primero = nuevo;
+            ultimNodo = nuevo;
+        } else {
             ultimNodo.sig = nuevo;
-        } 
-        nuevo.ant = ultimNodo; 
-        ultimNodo = nuevo;
-        nuevo.sig = null;    
+            nuevo.ant = ultimNodo;
+            ultimNodo = nuevo;
+            /*Nodo actual = primero;
+            while (actual.sig != null) {
+                actual = actual.sig;
+            }
+            actual.sig = nuevo;    
+            nuevo.ant = actual;*/
+            
+        }
         longitud ++;
     }
 
@@ -73,8 +84,12 @@ public class ListaEnlazada<T> implements Secuencia<T> {
         }
         if (i == 0) {
             primero = actual.sig;
+            actual.ant = null;
         } else {
             prev.sig = actual.sig;
+            if (actual.sig != null) {
+                actual.sig.ant = prev;
+            }
         }
         longitud --;
     }
@@ -82,7 +97,6 @@ public class ListaEnlazada<T> implements Secuencia<T> {
     public void modificarPosicion(int indice, T elem) {
         Nodo actual = primero;
         for (int j = 0; j < indice; j++) {
-            primero = actual;
             actual = actual.sig;
             
         }
@@ -91,44 +105,76 @@ public class ListaEnlazada<T> implements Secuencia<T> {
 
     public ListaEnlazada<T> copiar() {
         ListaEnlazada<T> nuevaLista = new ListaEnlazada<T>();
-        nuevaLista.longitud = longitud;
-        nuevaLista.primero = new Nodo<T>(primero.valor);
-        return nuevaLista; 
-
+        Nodo<T> actual = this.primero;
+        for (int j = 0; j < longitud; j ++) {
+            nuevaLista.agregarAtras(actual.valor);
+            actual = actual.sig;
+        } 
+        return nuevaLista;
     }
 
     public ListaEnlazada(ListaEnlazada<T> lista) {
-        throw new UnsupportedOperationException("No implementada aun");
+        Nodo<T> actual = lista.primero;
+        for(int j = 0; j < lista.longitud; j++){
+            this.agregarAtras(actual.valor);
+            actual = actual.sig;
+        }
     }
     
     @Override
     public String toString() {
-        throw new UnsupportedOperationException("No implementada aun");
+        String res = "";
+        res = res + "[";
+        Nodo<T> actual = primero;
+        for(int j = 0; j<longitud-1; j++){
+            res = res + actual.valor + ", ";
+            actual = actual.sig;
+        }
+        res = res + ultimNodo.valor + "]";
+        return res;
+
     }
 
     private class ListaIterador implements Iterador<T> {
-    	// Completar atributos privados
+    	Nodo<T> indice;
+        
+        public ListaIterador(){
+            this.indice = null;
+        }
 
         public boolean haySiguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            if(indice == null){
+                return primero != null;
+            } else {
+                return indice.sig!=null;
+            }
         }
         
         public boolean hayAnterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+	        return indice != null;
+            
         }
 
         public T siguiente() {
-	        throw new UnsupportedOperationException("No implementada aun");
+            if(indice == null){
+               indice = primero;
+               return indice.valor; 
+            } else {
+                indice = indice.sig;
+                return indice.valor;
+            }
         }
         
 
         public T anterior() {
-	        throw new UnsupportedOperationException("No implementada aun");
+                 Nodo<T> i = indice;
+                 indice = indice.ant;
+                 return i.valor;
         }
     }
 
     public Iterador<T> iterador() {
-	    throw new UnsupportedOperationException("No implementada aun");
+	    return new ListaIterador();
     }
 
 }
